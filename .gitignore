@@ -2,3 +2,11 @@
 progress.txt
 *.pyc
 cinbot/
+__pycache__/
+*.py[cod]
+.env
+.DS_Store
+data/
+tests/output/
+chroma_db/
+user_data/

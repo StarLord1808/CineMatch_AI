@@ -1,147 +1,96 @@
-# 🎬 Movie Recommendation Bot (IMDB-Driven)
+# 🎬 CineMatch AI (IMDb-Driven Recommendation Bot)
 
 > An AI-powered chatbot that recommends movies based on user prompts, built for integration into a streaming platform (e.g., Netflix-like).  
-> Data is sourced from IMDb reviews (feature, critics, and users), processed into embeddings, and served through a conversational interface.  
+> Data is sourced from IMDb reviews (feature, critics, and users), processed into embeddings, and served through a conversational interface.
 
 ---
 
-## 📖 Table of Contents
-1. [Phase 1: Strategy & Architecture Planning](#phase-1-strategy--architecture-planning)  
-2. [Phase 2: Data Acquisition Strategy (Scraping Plan)](#phase-2-data-acquisition-strategy-the-scraping-plan)  
-3. [Phase 3: Data Processing & Vectorization](#phase-3-data-processing--vectorization)  
-4. [Phase 4: Recommendation Engine Logic](#phase-4-recommendation-engine-logic)  
-5. [Phase 5: Chatbot Interface & Response Generation](#phase-5-chatbot-interface--response-generation)  
-6. [Phase 6: Deployment, Monitoring, and Iteration](#phase-6-deployment-monitoring-and-iteration)  
-7. [⚠️ Challenges & Mitigations](#️-challenges--mitigations)  
+## � Development Status
+**Current Phase:** Phase 1: Planning & Setup  
+**Goal:** Initialize project structure and build basic scraping prototypes.
 
 ---
 
-## Phase 1: Strategy & Architecture Planning
-
-### 1. Defining User Interaction (Prompts)
-Users can type natural-language prompts. The bot translates these into recommendations.  
-
-**Prompt categories:**
-- **Mood-Based:**  
-  `"I want a movie that feels like a warm hug on a rainy day."`  
-- **Vibe/Theme-Based:**  
-  `"Recommend a movie with a shocking plot twist I'll never see coming."`  
-- **Comparative:**  
-  `"Find me something similar to Inception but with less action and more philosophy."`  
-- **Specific Element-Based:**  
-  `"I want a thriller with a strong female lead and a cat-and-mouse chase."`  
-- **Abstract:**  
-  `"Make me question reality."`  
+## 🛠️ Tech Stack
+- **Language:** Python 3.10+
+- **API Framework:** FastAPI + Uvicorn
+- **Vector Database:** ChromaDB
+- **ML/Embeddings:** Sentence Transformers (`all-MiniLM-L6-v2`), PyTorch
+- **Scraping:** BeautifulSoup4, Requests
+- **Frontend:** (Planned) React/Vue.js widget
 
 ---
 
-### 2. High-Level System Architecture
+## 🚀 Getting Started
+
+### Prerequisites
+- Python 3.10 or higher
+- `pip`
+
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/StarLord1808/CineMatch_AI.git
+   cd CineMatch_AI
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Run the application (Coming Soon):
+   ```bash
+   # uvicorn app.main:app --reload
+   ```
+
+---
+
+## 📖 Roadmap & Architecture
+
+### 1. Phase 1: Strategy & Architecture Planning
+**Goal:** Define the system prompts and high-level data flow.
+- [x] Define Prompt Categories (Mood, Vibe, Comparative)
+- [x] Design System Architecture
+
+### 2. Phase 2: Data Acquisition Strategy (Scraping)
+**Goal:** Build a robust, ethical scraping pipeline.
+- **Tools:** `BeautifulSoup4`, `requests` (with rate limiting)
+- **Targets:** Metadata (Title, Year, Cast), User Reviews, Critic Reviews.
+
+### 3. Phase 3: Data Processing & Vectorization
+**Goal:** Convert raw text into searchable vectors.
+- **Cleaning:** Lemmatization, stopword removal.
+- **Embedding:** `sentence-transformers` to generate dense vectors.
+- **Storage:** ChromaDB local persistence.
+
+### 4. Phase 4: Recommendation Engine Logic
+**Goal:** Match user prompts to movie vectors.
+- **Search:** Cosine similarity.
+- **Re-Ranking:** Diversity filters, availability checks.
+
+### 5. Phase 5: Chatbot Interface
+**Goal:** User-facing interaction.
+- **Backend:** FastAPI endpoints for `/recommend` and `/chat`.
+- **Frontend:** Simple chat widget.
+
+### 6. Phase 6: Deployment
+- Docker containerization.
+- Cloud deployment (AWS/GCP).
+
+---
+
+## ⚠️ Challenges & Mitigations
+- **Scraping Legality:** We strictly respect `robots.txt` and use delays.
+- **Cold Start:** Fallback to metadata-based recommendations for new movies.
+- **Compute:** Using lightweight models (`MiniLM`) to keep inference fast on CPU.
+
+---
+
+### High-Level System Architecture
 ```
 [IMDb.com] -> [Scraping Engine] -> [Raw Text Data (Reviews)]
 [Raw Text Data] -> [Processing Engine] -> [Vector Database]
 [User Prompt] -> [Chatbot Interface] -> [Recommendation Engine] -> [Vector DB]
 [Recommendation Engine] -> [Ranked Movies] -> [Chatbot Interface] -> [User]
 ```
-
-**Components:**
-- **Scraping Engine** → Gather data from IMDb  
-- **Processing & Vectorization Engine** → Clean + embed reviews  
-- **Recommendation Engine** → Match prompts with vectors  
-- **Chatbot Interface** → User interaction layer  
-
----
-
-## Phase 2: Data Acquisition Strategy (The Scraping Plan)
-
-**Tools:** Python + `BeautifulSoup4`, `Scrapy`, `Selenium`, `requests`  
-
-**Ethics:**  
-- Respect [`robots.txt`](https://www.imdb.com/robots.txt)  
-- Add delays (`time.sleep()`)  
-- Rotate user-agents  
-- Use IMDb-API for metadata where possible  
-
-**Data Targets:**  
-- Movie Metadata: title, year, cast, genres, summary  
-- Featured Reviews & Critic Reviews  
-- Top-voted User Reviews (20–30 per film)  
-
-**Bootstrapping the DB:**  
-- Start with ~1,000–2,000 films (popular + niche)  
-- Weekly incremental updates (new movies, refreshed reviews)  
-
----
-
-## Phase 3: Data Processing & Vectorization
-
-**Text Cleaning:**  
-- Lowercase, strip punctuation/HTML  
-- Remove stopwords  
-- Lemmatization (`running` → `run`)  
-
-**Embedding Model:**  
-- Pretrained Sentence Transformer (e.g., `all-MiniLM-L6-v2`)  
-- Output = dense vector embedding (≈384 dimensions)  
-
-**Workflow:**  
-- Combine metadata + plot + reviews → single corpus per movie  
-- Pass through transformer → movie embedding  
-- Store in **Vector DB** (ChromaDB, Pinecone, Weaviate)  
-
----
-
-## Phase 4: Recommendation Engine Logic
-
-**Steps:**
-1. **Prompt Vectorization** → Convert user request into embedding  
-2. **Similarity Search** → Query vector DB (Cosine Similarity)  
-3. **Re-Ranking:**  
-   - Filter unavailable titles  
-   - Boost recent releases (if neutral prompt)  
-   - Enforce diversity across results  
-
----
-
-## Phase 5: Chatbot Interface & Response Generation
-
-**Frontend:** Web/app widget (React, Vue.js)  
-**Backend:** Python (`FastAPI`, `Django`)  
-
-**Response Style:**  
-- Explain *why* a movie was chosen using review snippets  
-- Not just lists—contextual explanations  
-
-**Example:**  
-```
-Prompt: "mind-bending thriller with amazing visuals"
-Bot: "You might like Tenet (2020). 
-Users describe it as a 'spectacular, puzzle-like experience' 
-and 'visually stunning,' though some found the plot 'complex and hard to follow.'"
-```  
-
----
-
-## Phase 6: Deployment, Monitoring, and Iteration
-
-**Deployment:** Docker + Cloud (AWS/GCP/Azure)  
-**Monitoring:**  
-- Log prompts + recs  
-- Track CTR (click-through-rate)  
-
-**Iteration:**  
-- Use feedback (thumbs up/down)  
-- Fine-tune embeddings  
-- Improve re-ranking logic  
-
----
-
-## ⚠️ Challenges & Mitigations
-
-- **Scraping Legality** → Respect rate limits, prefer official APIs  
-- **Compute Costs** → Start small, scale embeddings gradually  
-- **Cold Start Problem** → Use metadata + genre/director fallback for new movies  
-- **Bias in Reviews** → Acknowledge reviewer demographic bias and mitigate in re-ranking  
-
----
-
-🚀 *This README is your living guide: update it as the bot evolves from MVP to production.*  
