@@ -1,5 +1,5 @@
-from services.search import SearchService
-from services.ranking import RankingService
+from cinematch.core.search import SearchService
+from cinematch.core.ranking import RankingService
 from typing import List, Dict
 
 class RecommendationEngine:

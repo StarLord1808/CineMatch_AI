@@ -3,9 +3,9 @@ import pandas as pd
 import json
 import os
 import glob
-from processing.cleaning import clean_text
-from processing.embedding import EmbeddingModel
-from processing.store import VectorStore
+from cinematch.processing.cleaning import clean_text
+from cinematch.processing.embedding import EmbeddingModel
+from cinematch.processing.store import VectorStore
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUTPUT_DIR = os.path.join(BASE_DIR, "tests", "output")

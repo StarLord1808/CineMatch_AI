@@ -1,12 +1,16 @@
-/src/cineMatch_venv/
-progress.txt
-*.pyc
-cinbot/
+# Python
 __pycache__/
 *.py[cod]
+*$py.class
+*.pyc
+
+# Virtual Environment
+venv/
 .env
-.DS_Store
+
+# Project specific
 data/
 tests/output/
 chroma_db/
 user_data/
+.DS_Store

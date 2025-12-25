@@ -1,5 +1,5 @@
-from processing.embedding import EmbeddingModel
-from processing.store import VectorStore
+from cinematch.processing.embedding import EmbeddingModel
+from cinematch.processing.store import VectorStore
 from typing import List, Dict
 
 class SearchService:

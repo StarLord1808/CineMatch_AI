@@ -1,4 +1,4 @@
-from scraper.imdb_scraper import IMDbScraperDDGS
+from cinematch.scraper.imdb_scraper import IMDbScraperDDGS
 import json
 from pathlib import Path
 

@@ -9,7 +9,7 @@ Usage:
     python -m tests.test_scraper_manual
 """
 
-from scraper.imdb_scraper import IMDbScraper
+from cinematch.scraper.imdb_scraper import IMDbScraper
 
 def main():
     """

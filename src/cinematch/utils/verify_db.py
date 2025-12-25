@@ -1,4 +1,4 @@
-from processing.store import VectorStore
+from cinematch.processing.store import VectorStore
 
 store = VectorStore()
 count = store.count()

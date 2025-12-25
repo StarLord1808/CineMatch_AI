@@ -3,7 +3,7 @@ import time
 import random
 import requests
 from bs4 import BeautifulSoup
-from scraper.imdb_scraper import IMDbScraperDDGS
+from cinematch.scraper.imdb_scraper import IMDbScraperDDGS
 from pathlib import Path
 from typing import List
 
