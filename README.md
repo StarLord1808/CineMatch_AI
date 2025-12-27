@@ -5,6 +5,11 @@
 
 ---
 
+### 📖 New to the project?
+Check out our beginner-friendly **[Codebase Guide](docs/codebase_guide.md)** to understand how everything works under the hood!
+
+---
+
 ## � Development Status
 **Current Phase:** Phase 1: Planning & Setup  
 **Goal:** Initialize project structure and build basic scraping prototypes.
